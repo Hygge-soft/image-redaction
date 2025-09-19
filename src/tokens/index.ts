@@ -4,3 +4,5 @@
 export const ROOT_ELEMENT_TOKEN = Symbol();
 
 export const IS_READONLY_TOKEN = Symbol();
+
+export const THRESHOLD_SIZE_TOKEN = Symbol();

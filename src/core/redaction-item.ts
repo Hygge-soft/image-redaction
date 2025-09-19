@@ -1,7 +1,7 @@
 import { ComponentsMediator, DecoratedFrame, Destroyable, MatrixItem, Position } from '../models';
 import { ComponentsContainer, Edge, InteractiveSquare, Label } from '../components';
-import { ActionType, EDGE_SIDES, THRESHOLD_SIZE } from '../constants';
-import { IS_READONLY_TOKEN } from '../tokens';
+import { ActionType, EDGE_SIDES } from '../constants';
+import { IS_READONLY_TOKEN, THRESHOLD_SIZE_TOKEN } from '../tokens';
 
 import { ComponentFactory } from './component-factory';
 import { IocContainer } from './ioc-container';
@@ -16,7 +16,7 @@ export class RedactionItem implements ComponentsMediator, MatrixItem, DecoratedF
   private readonly _square: InteractiveSquare;
   private _destroyed = false;
 
-  constructor(iocContainer: IocContainer, position: Position) {
+  constructor(private readonly iocContainer: IocContainer, position: Position) {
     this._position = position;
     this._matrixManager = iocContainer.get(MatrixManager);
     const componentFactory = iocContainer.get(ComponentFactory);
@@ -88,9 +88,10 @@ export class RedactionItem implements ComponentsMediator, MatrixItem, DecoratedF
   }
 
   public validateSize(): void {
+    const thresholdSize = this.iocContainer.get<number>(THRESHOLD_SIZE_TOKEN);
     const width = this._square.element.offsetWidth;
     const height = this._square.element.offsetHeight;
-    const isInvalid = Math.min(width, height) < THRESHOLD_SIZE;
+    const isInvalid = Math.min(width, height) < thresholdSize;
 
     this._square.isInvalid = isInvalid;
     this._isInvalid = isInvalid;

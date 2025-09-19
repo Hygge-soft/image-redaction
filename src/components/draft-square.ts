@@ -1,7 +1,6 @@
 import { getColorVariable, IocContainer } from '../core';
 import { StyledComponent } from '../decorators';
-import { ROOT_ELEMENT_TOKEN } from '../tokens';
-import { THRESHOLD_SIZE } from '../constants';
+import { ROOT_ELEMENT_TOKEN, THRESHOLD_SIZE_TOKEN } from '../tokens';
 
 import { Square } from './square';
 
@@ -19,7 +18,7 @@ import { Square } from './square';
   }
 `)
 export class DraftSquare extends Square {
-  constructor(iocContainer: IocContainer) {
+  constructor(private readonly iocContainer: IocContainer) {
     const rootElement = iocContainer.get<HTMLElement>(ROOT_ELEMENT_TOKEN);
     super(rootElement, 'draft-square');
   }
@@ -36,9 +35,10 @@ export class DraftSquare extends Square {
   }
 
   private _validateSize(): void {
+    const thresholdSize = this.iocContainer.get<number>(THRESHOLD_SIZE_TOKEN);
     const width = this.element.offsetWidth;
     const height = this.element.offsetHeight;
-    const isInvalid = Math.min(width, height) < THRESHOLD_SIZE;
+    const isInvalid = Math.min(width, height) < thresholdSize;
 
     this._isValid = !isInvalid;
     this.element.classList.toggle('draft-square--error', isInvalid);

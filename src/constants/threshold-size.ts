@@ -1,1 +1,1 @@
-export const THRESHOLD_SIZE = 20;
+export const THRESHOLD_SIZE = 12;

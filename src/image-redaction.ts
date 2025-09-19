@@ -8,15 +8,16 @@ import {
   MatrixManager,
   StyleConfigurator,
 } from './core';
-import { IS_READONLY_TOKEN, ROOT_ELEMENT_TOKEN } from './tokens';
+import { IS_READONLY_TOKEN, ROOT_ELEMENT_TOKEN, THRESHOLD_SIZE_TOKEN } from './tokens';
 import { Subscription } from './common';
-import { ActionType } from './constants';
+import { ActionType, THRESHOLD_SIZE } from './constants';
 
 interface Config {
   matrix?: Matrix<{ position: Position }>;
   isReadonly: boolean;
   imageSource: string;
   hostElement: HTMLElement;
+  threshold?: number;
 }
 
 export class ImageRedaction implements Destroyable {
@@ -28,6 +29,7 @@ export class ImageRedaction implements Destroyable {
   private _destroyed = false;
 
   constructor(config: Config) {
+    const thresholdSize = config.threshold ?? THRESHOLD_SIZE;
     this._iocContainer = new IocContainer();
 
     this._matrixManager = new MatrixManager();
@@ -49,6 +51,7 @@ export class ImageRedaction implements Destroyable {
     this._iocContainer.register(ROOT_ELEMENT_TOKEN, rootElement);
     this._iocContainer.register(IS_READONLY_TOKEN, config.isReadonly);
     this._iocContainer.register(ComponentFactory, componentFactory);
+    this._iocContainer.register(THRESHOLD_SIZE_TOKEN, thresholdSize);
 
     const componentsContainer = componentFactory
       .create(ComponentsContainer, this._iocContainer)
